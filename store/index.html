@@ -36,7 +36,13 @@ input,select{font:inherit}
 .badge[hidden]{display:none}
 
 /* Header */
-.hero{padding:28px 0 8px}
+.banner{position:relative;margin-top:16px;border-radius:var(--r);overflow:hidden;aspect-ratio:21/9;min-height:200px;background:#1C1C1E}
+.banner img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.banner .txt{position:absolute;inset:auto 0 0 0;padding:22px 24px;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.62));color:#fff}
+.banner h1{font-size:30px;font-weight:700;margin:0;letter-spacing:-.02em;line-height:1.2}
+.banner p{margin:4px 0 0;font-size:16px;opacity:.9}
+@media (max-width:600px){.banner{aspect-ratio:16/10}.banner h1{font-size:24px}}
+.hero{padding:8px 0 8px}
 .hero h1{font-size:34px;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.2}
 .hero p{margin:6px 0 0;color:var(--secondary);opacity:.7;font-size:17px}
 .search{margin-top:16px;display:flex;align-items:center;gap:8px;background:rgba(118,118,128,.12);border-radius:10px;padding:8px 10px;color:var(--tertiary)}
@@ -59,7 +65,9 @@ input,select{font:inherit}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;padding-bottom:48px}
 .card{background:var(--card);border-radius:var(--r);overflow:hidden;text-align:start;display:flex;flex-direction:column;transition:transform .15s}
 .card:active{transform:scale(.98)}
-.thumb{aspect-ratio:1;margin:8px 8px 0;border-radius:12px;background:#EEEFF3;display:grid;place-items:center}
+.thumb{aspect-ratio:1;margin:8px 8px 0;border-radius:12px;background:#EEEFF3;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.card:hover .thumb img{transform:scale(1.04)}
 .thumb svg{width:38%;height:38%;fill:none;stroke:#1C1C1E;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
 .card .info{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px}
 .card .name{font-weight:600;font-size:15px;line-height:1.3}
@@ -96,7 +104,8 @@ input,select{font:inherit}
 .btn[disabled]{background:var(--fill);color:var(--tertiary)}
 
 /* Product detail */
-.detail .big{aspect-ratio:4/3;border-radius:var(--r);background:#EEEFF3;display:grid;place-items:center;margin-top:4px}
+.detail .big{aspect-ratio:4/3;border-radius:var(--r);background:#EEEFF3;overflow:hidden;margin-top:4px}
+.detail .big img{width:100%;height:100%;object-fit:cover;display:block}
 .detail .big svg{width:36%;height:36%;fill:none;stroke:#1C1C1E;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
 .detail h2{font-size:24px;font-weight:700;margin:16px 0 2px;letter-spacing:-.01em}
 .detail .cat{color:var(--tertiary);font-size:15px}
@@ -112,7 +121,8 @@ input,select{font:inherit}
 .list{background:var(--card);border-radius:var(--r);overflow:hidden}
 .item{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--sep)}
 .item:last-child{border-bottom:0}
-.item .t{width:56px;height:56px;border-radius:12px;background:#EEEFF3;display:grid;place-items:center}
+.item .t{width:56px;height:56px;border-radius:12px;background:#EEEFF3;overflow:hidden}
+.item .t img{width:100%;height:100%;object-fit:cover;display:block}
 .item .t svg{width:26px;height:26px;fill:none;stroke:#1C1C1E;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .item .n{font-weight:600;font-size:15px}
 .item .p{color:var(--tertiary);font-size:13px;font-variant-numeric:tabular-nums}
@@ -165,9 +175,8 @@ footer{color:var(--tertiary);font-size:13px;text-align:center;padding:12px 0 cal
 </div></header>
 
 <main class="wrap">
+  <div class="banner"><img src="img/hero.jpg" alt=""><div class="txt"><h1>مختارات من المملكة</h1><p>قهوة وتمور وبهارات وعطور من مصادرها الأصلية.</p></div></div>
   <div class="hero">
-    <h1>مختارات من المملكة</h1>
-    <p>قهوة وتمور وبهارات وعطور من مصادرها الأصلية.</p>
     <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg><input id="q" type="search" placeholder="ابحث في المنتجات" autocomplete="off"></label>
   </div>
   <div class="chips" id="chips"></div>
@@ -241,16 +250,17 @@ var ICONS={
   flower:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M12 9.5V4M12 14.5V20M9.5 12H4M14.5 12H20M10.2 10.2 6.5 6.5M13.8 13.8l3.7 3.7M13.8 10.2l3.7-3.7M10.2 13.8l-3.7 3.7"/></svg>'
 };
 var PRODUCTS=[
-  {id:1,name:'قهوة عربية مختصة',cat:'قهوة',price:48,icon:'cup',desc:'حبوب محمصة تحميصًا فاتحًا من مزارع جازان، 250 جم.'},
-  {id:2,name:'تمر سكري فاخر',cat:'تمور',price:65,icon:'leaf',desc:'تمر سكري من القصيم، عبوة 1 كجم.'},
-  {id:3,name:'هيل أخضر',cat:'بهارات',price:32,icon:'sparkle',desc:'هيل كامل عالي الجودة، 250 جم.'},
-  {id:4,name:'زعفران',cat:'بهارات',price:120,icon:'flame',desc:'زعفران خيوط فاخر، 5 جم.'},
-  {id:5,name:'عسل سدر',cat:'عسل',price:180,icon:'drop',desc:'عسل سدر طبيعي، 500 جم.'},
-  {id:6,name:'شاي كرك',cat:'شاي',price:28,icon:'mug',desc:'خلطة شاي بالحليب والهيل، 20 كيسًا.'},
-  {id:7,name:'بخور عود',cat:'عطور',price:95,icon:'wind',desc:'بخور عود طبيعي، 50 جم.'},
-  {id:8,name:'ماء ورد الطائف',cat:'عطور',price:40,icon:'flower',desc:'ماء ورد طبيعي من الطائف، 250 مل.'}
+  {id:1,name:'قهوة عربية مختصة',cat:'قهوة',price:48,img:'coffee',desc:'حبوب محمصة تحميصًا فاتحًا من مزارع جازان، 250 جم.'},
+  {id:2,name:'تمر سكري فاخر',cat:'تمور',price:65,img:'dates',desc:'تمر سكري من القصيم، عبوة 1 كجم.'},
+  {id:3,name:'هيل أخضر',cat:'بهارات',price:32,img:'cardamom',desc:'هيل كامل عالي الجودة، 250 جم.'},
+  {id:4,name:'زعفران',cat:'بهارات',price:120,img:'saffron',desc:'زعفران خيوط فاخر، 5 جم.'},
+  {id:5,name:'عسل سدر',cat:'عسل',price:180,img:'honey',desc:'عسل سدر طبيعي، 500 جم.'},
+  {id:6,name:'شاي كرك',cat:'شاي',price:28,img:'tea',desc:'خلطة شاي بالحليب والهيل، 20 كيسًا.'},
+  {id:7,name:'بخور عود',cat:'عطور',price:95,img:'bakhoor',desc:'بخور عود طبيعي، 50 جم.'},
+  {id:8,name:'ماء ورد الطائف',cat:'عطور',price:40,img:'rose',desc:'ماء ورد طبيعي من الطائف، 250 مل.'}
 ];
 var DELIVERY=15;
+function pic(p,cls){return '<img class="'+(cls||'')+'" src="img/'+p.img+'.jpg" alt="'+p.name+'" loading="lazy">'}
 var cart={}; var current=null; var qty=1; var pay='Apple Pay'; var activeCat='الكل';
 function $(s){return document.querySelector(s)}
 function money(n){return '<span class="price">'+n+'<small>ر.س</small></span>'}
@@ -268,7 +278,7 @@ function render(){
   var list=PRODUCTS.filter(function(p){return (activeCat==='الكل'||p.cat===activeCat)&&(!q||p.name.indexOf(q)>-1||p.cat.indexOf(q)>-1)});
   $('#secTitle').textContent=q?'نتائج البحث':(activeCat==='الكل'?'الأكثر طلبًا':activeCat);
   $('#count').textContent=list.length+' منتج';
-  $('#grid').innerHTML=list.map(function(p){return '<button class="card" data-open="'+p.id+'"><div class="thumb">'+ICONS[p.icon]+'</div><div class="info"><div class="name">'+p.name+'</div><div class="cat">'+p.cat+'</div><div class="row">'+money(p.price)+'<span class="add" data-add="'+p.id+'" role="button" aria-label="أضف"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></div></div></button>'}).join('')||'<div class="empty">لا توجد منتجات مطابقة</div>';
+  $('#grid').innerHTML=list.map(function(p){return '<button class="card" data-open="'+p.id+'"><div class="thumb">'+pic(p)+'</div><div class="info"><div class="name">'+p.name+'</div><div class="cat">'+p.cat+'</div><div class="row">'+money(p.price)+'<span class="add" data-add="'+p.id+'" role="button" aria-label="أضف"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></div></div></button>'}).join('')||'<div class="empty">لا توجد منتجات مطابقة</div>';
 }
 $('#grid').addEventListener('click',function(e){
   var a=e.target.closest('[data-add]'); if(a){e.stopPropagation();add(+a.dataset.add,1);return}
@@ -283,7 +293,7 @@ $('#scrim').addEventListener('click',closeAll);
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll()});
 
 /* Detail */
-function openDetail(id){current=byId(id);qty=1;$('#qVal').textContent=qty;$('#dIcon').innerHTML=ICONS[current.icon];$('#dName').textContent=current.name;$('#dCat').textContent=current.cat;$('#dPrice').innerHTML=current.price+'<small>ر.س</small>';$('#dDesc').textContent=current.desc;var b=$('#dAdd');b.textContent='أضف إلى السلة';b.classList.remove('done');closeAll();open('#detail')}
+function openDetail(id){current=byId(id);qty=1;$('#qVal').textContent=qty;$('#dIcon').innerHTML=pic(current);$('#dName').textContent=current.name;$('#dCat').textContent=current.cat;$('#dPrice').innerHTML=current.price+'<small>ر.س</small>';$('#dDesc').textContent=current.desc;var b=$('#dAdd');b.textContent='أضف إلى السلة';b.classList.remove('done');closeAll();open('#detail')}
 $('#qMinus').onclick=function(){if(qty>1){qty--;$('#qVal').textContent=qty}};
 $('#qPlus').onclick=function(){if(qty<20){qty++;$('#qVal').textContent=qty}};
 $('#dAdd').onclick=function(){add(current.id,qty);var b=$('#dAdd');b.textContent='أُضيف إلى السلة';b.classList.add('done');setTimeout(closeAll,700)};
@@ -297,7 +307,7 @@ function renderCart(){
   var keys=Object.keys(cart);var body=$('#cartBody');
   if(!keys.length){body.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L21 8H6.5"/><circle cx="10" cy="20" r="1.2"/><circle cx="17" cy="20" r="1.2"/></svg><div>السلة فارغة</div></div>';$('#checkoutBtn').disabled=true;return}
   $('#checkoutBtn').disabled=false;
-  body.innerHTML='<div class="list">'+keys.map(function(k){var p=byId(+k);return '<div class="item"><div class="t">'+ICONS[p.icon]+'</div><div><div class="n">'+p.name+'</div><div class="p">'+p.price+' ر.س × '+cart[k]+'</div></div><div class="qty"><button data-dec="'+k+'" aria-label="أقل">−</button><span>'+cart[k]+'</span><button data-inc="'+k+'" aria-label="أكثر">+</button></div></div>'}).join('')+'</div>'+summary();
+  body.innerHTML='<div class="list">'+keys.map(function(k){var p=byId(+k);return '<div class="item"><div class="t">'+pic(p)+'</div><div><div class="n">'+p.name+'</div><div class="p">'+p.price+' ر.س × '+cart[k]+'</div></div><div class="qty"><button data-dec="'+k+'" aria-label="أقل">−</button><span>'+cart[k]+'</span><button data-inc="'+k+'" aria-label="أكثر">+</button></div></div>'}).join('')+'</div>'+summary();
 }
 function summary(){var t=total();return '<div class="sum"><div><span>المجموع</span><span>'+t+' ر.س</span></div><div><span>التوصيل</span><span>'+DELIVERY+' ر.س</span></div><div><span>الإجمالي</span><span>'+(t+DELIVERY)+' ر.س</span></div></div>'}
 $('#cartBody').addEventListener('click',function(e){
