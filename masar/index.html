@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مسار · إدارة الأسطول</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{
+  --bg:#F2F2F7;--card:#FFFFFF;--label:#1D1D1F;--secondary:#6E6E73;--tertiary:#8E8E93;--sep:rgba(60,60,67,.12);--fill:#E9E9EE;
+  --brand:#0F9D8F;--brand-press:#0B8578;--tint:rgba(15,157,143,.11);
+  --good:#0CA30C;--warn:#FAB219;--serious:#EC835A;--crit:#D03B3B;
+  --r1:#0f9d8f;--r2:#eb6834;--r3:#6250d6;--r4:#eda100;--r5:#e87ba4;--r6:#2a78d6;
+  --font:-apple-system,BlinkMacSystemFont,"SF Arabic","Segoe UI",Roboto,sans-serif;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.05);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--label);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+h1,h2,h3,p{margin:0}
+svg{display:block}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+
+/* Sidebar */
+.side{width:232px;flex:none;background:var(--card);border-left:1px solid var(--sep);display:flex;flex-direction:column;padding:18px 14px;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;padding:6px 8px 22px;font-weight:700;font-size:18px}
+.logo i{width:32px;height:32px;border-radius:9px;background:var(--brand);display:grid;place-items:center}
+.logo i svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.logo small{display:block;font-weight:400;font-size:11px;color:var(--tertiary)}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;color:var(--secondary);font-weight:500;margin-bottom:2px}
+.nav a svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nav a:hover{background:rgba(0,0,0,.04);color:var(--label)}
+.nav a.on{background:var(--tint);color:var(--brand)}
+.nav a .b{margin-right:auto;background:var(--crit);color:#fff;font-size:11px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 5px}
+.side .org{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--sep)}
+.ava{width:32px;height:32px;border-radius:50%;background:#DCE8E6;color:var(--brand);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.org b{display:block;font-size:13px}.org span{font-size:11px;color:var(--tertiary)}
+
+/* Main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:14px 26px;position:sticky;top:0;z-index:5;background:rgba(242,242,247,.86);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px)}
+.top h1{font-size:22px;font-weight:700}
+.top .date{color:var(--secondary);font-size:13px}
+.search{margin-right:auto;display:flex;align-items:center;gap:8px;background:rgba(118,118,128,.12);border-radius:10px;height:36px;padding:0 12px;width:260px;color:var(--tertiary)}
+.search svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.search input{border:0;background:none;outline:0;font:inherit;width:100%;color:var(--label)}
+.btn{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:10px;font-weight:600;font-size:13.5px;transition:background .15s}
+.btn.primary{background:var(--brand);color:#fff}.btn.primary:hover{background:var(--brand-press)}
+.btn.tinted{background:var(--tint);color:var(--brand)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--secondary);font-size:13px}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px rgba(12,163,12,.18)}
+.page{padding:6px 26px 32px;display:none;flex-direction:column;gap:18px}
+.page.on{display:flex}
+
+/* Cards */
+.card{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px;min-width:0}
+.card h2{font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
+.card h2 span{font-weight:400;color:var(--tertiary);font-size:12.5px}
+.card .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.seg{display:inline-flex;background:rgba(118,118,128,.12);border-radius:8px;padding:2px}
+.seg button{height:26px;padding:0 10px;border-radius:6px;font-size:12.5px;font-weight:500}
+.seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.kpi{padding:16px 18px}
+.kpi .l{font-size:12.5px;color:var(--secondary);font-weight:500}
+.kpi .v{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-top:4px;line-height:1.2}
+.kpi .v small{font-size:14px;font-weight:500;color:var(--tertiary);margin-right:3px}
+.kpi .d{font-size:12px;margin-top:6px;color:var(--secondary);display:flex;align-items:center;gap:5px}
+.kpi .d.up{color:var(--good)}.kpi .d.down{color:var(--crit)}
+.kpi .d svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+
+/* Map */
+.mapcard{padding:0;overflow:hidden;position:relative}
+.mapcard .hd{position:absolute;z-index:500;top:14px;right:14px;left:14px;margin:0;pointer-events:none}
+.mapcard .hd>*{pointer-events:auto}
+.chip{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;box-shadow:var(--shadow)}
+#map,#map2{height:440px;width:100%;background:#E9ECEF}
+#map2{height:calc(100vh - 128px);min-height:520px}
+.leaflet-container{font-family:var(--font)}
+.leaflet-tile-pane{filter:saturate(.35) contrast(.92) brightness(1.04)}
+.leaflet-control-attribution{font-size:9px;direction:ltr}
+.veh{width:16px;height:16px;border-radius:50%;background:var(--brand);border:3px solid #fff;box-shadow:0 0 0 2px rgba(15,157,143,.35),0 2px 6px rgba(0,0,0,.25)}
+.veh.alert{background:var(--crit);box-shadow:0 0 0 2px rgba(208,59,59,.35),0 2px 6px rgba(0,0,0,.25)}
+.stop{width:10px;height:10px;border-radius:50%;background:#fff;border:2.5px solid var(--c,#555)}
+.depot{width:26px;height:26px;border-radius:8px;background:#1D1D1F;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.depot svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linejoin:round}
+.legend{position:absolute;z-index:500;bottom:14px;right:14px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-radius:12px;padding:10px 12px;display:grid;gap:5px;font-size:12px;box-shadow:var(--shadow)}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:14px;height:3px;border-radius:2px;background:var(--c)}
+.leaflet-popup-content-wrapper{border-radius:12px;box-shadow:var(--shadow);font-family:var(--font)}
+.leaflet-popup-content{margin:10px 14px;font-size:13px;line-height:1.5}
+.leaflet-popup-content b{display:block}
+
+/* Charts */
+.chart{position:relative}
+.chart svg{width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--font);font-size:11px;fill:var(--tertiary)}
+.chart .gl{stroke:var(--sep);stroke-width:1}
+.chart .ax{stroke:rgba(60,60,67,.3);stroke-width:1}
+.tip{position:fixed;z-index:1000;pointer-events:none;background:#1D1D1F;color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .12s;white-space:nowrap;transform:translate(-50%,calc(-100% - 10px))}
+.tip b{display:block;font-weight:600}
+.lg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--secondary);margin-top:10px}
+.lg span{display:inline-flex;align-items:center;gap:6px}
+.lg i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.donut{display:flex;align-items:center;gap:22px}
+.donut .lg{display:grid;gap:8px;margin:0}
+.donut .lg b{color:var(--label);font-weight:600;margin-right:auto}
+.ring{position:relative;flex:none}
+.ring .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .c b{font-size:24px;font-weight:700;line-height:1}
+.ring .c span{font-size:11px;color:var(--tertiary)}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:right;font-weight:500;color:var(--tertiary);font-size:12px;padding:0 10px 10px;border-bottom:1px solid var(--sep)}
+td{padding:12px 10px;border-bottom:1px solid var(--sep);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:rgba(0,0,0,.025)}
+.st{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.st::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--tertiary));flex:none}
+.rt{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.rt i{width:10px;height:10px;border-radius:3px;background:var(--c)}
+td .sub{display:block;color:var(--tertiary);font-size:12px}
+.bar{height:6px;border-radius:3px;background:var(--fill);overflow:hidden;min-width:90px}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--brand)}
+.dv{display:flex;align-items:center;gap:10px}
+.dv .ava{width:28px;height:28px;font-size:12px}
+
+/* Routes page */
+.rlist{display:grid;gap:10px;max-height:calc(100vh - 128px);overflow:auto;padding-left:2px}
+.ritem{padding:14px 16px;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s}
+.ritem.on{border-color:var(--brand)}
+.ritem .t{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ritem .m{display:flex;gap:14px;color:var(--secondary);font-size:12.5px;margin-top:6px}
+.ritem .m b{color:var(--label);font-weight:600}
+.legs{margin-top:12px;padding-top:12px;border-top:1px solid var(--sep);display:none}
+.ritem.on .legs{display:block}
+.leg{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;padding:4px 0;font-size:12.5px;color:var(--secondary)}
+.leg i{width:8px;height:8px;border-radius:50%;background:var(--c);justify-self:center}
+.leg b{color:var(--label);font-weight:500}
+
+/* Alerts */
+.alist{display:grid;gap:10px}
+.al{display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:14px 16px}
+.al i{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--fill)}
+.al i svg{width:18px;height:18px;stroke:var(--label);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.al i.crit svg{stroke:var(--crit)}.al i.warn svg{stroke:#B77A00}
+.al b{display:block;font-weight:600}
+.al span{color:var(--secondary);font-size:12.5px}
+.al time{color:var(--tertiary);font-size:12px}
+
+.note{color:var(--tertiary);font-size:12px;text-align:center;padding:4px}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.grid,.grid3,.grid2{grid-template-columns:minmax(0,1fr)}#map2{height:420px}}
+@media (max-width:760px){.side{display:none}.top{padding:12px 16px}.page{padding:6px 16px 24px}.search{display:none}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+
+<aside class="side">
+  <div class="logo"><i><svg viewBox="0 0 24 24"><path d="M4 18c4 0 4-12 8-12s4 12 8 12"/><circle cx="4" cy="18" r="1.6"/><circle cx="20" cy="18" r="1.6"/></svg></i><div>مسار<small>إدارة الأسطول والمسارات</small></div></div>
+  <nav class="nav" id="nav">
+    <a href="#overview" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>نظرة عامة</a>
+    <a href="#routes"><svg viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h5a4 4 0 0 0 0-8H11a4 4 0 0 1 0-8h5"/></svg>المسارات</a>
+    <a href="#vehicles"><svg viewBox="0 0 24 24"><path d="M3 15V9l3-5h8l2 5h3a2 2 0 0 1 2 2v4"/><circle cx="7.5" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/><path d="M9.5 17.5h6M3 15h2.5M19.5 15H21"/></svg>المركبات</a>
+    <a href="#drivers"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>السائقون</a>
+    <a href="#alerts"><svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg>التنبيهات<span class="b">3</span></a>
+    <a href="#reports"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>التقارير</a>
+  </nav>
+  <div class="org"><span class="ava">ن</span><div><b>شركة النقل السريع</b><span>فرع الرياض · 24 مركبة</span></div></div>
+</aside>
+
+<main class="main">
+  <header class="top">
+    <div><h1 id="title">نظرة عامة</h1><div class="date" id="today"></div></div>
+    <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="ابحث عن مركبة أو سائق أو مسار"></label>
+    <span class="live">تحديث مباشر</span>
+    <button class="btn primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>مسار جديد</button>
+  </header>
+
+  <!-- Overview -->
+  <section class="page on" id="overview">
+    <div class="kpis">
+      <div class="card kpi"><div class="l">الرحلات اليوم</div><div class="v num">148</div><div class="d up"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>6% عن أمس</div></div>
+      <div class="card kpi"><div class="l">الالتزام بالوقت</div><div class="v num">94.2<small>%</small></div><div class="d up"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>1.4 نقطة هذا الأسبوع</div></div>
+      <div class="card kpi"><div class="l">الكيلومترات المقطوعة</div><div class="v num">2,340</div><div class="d">معدل 130 كم لكل مركبة</div></div>
+      <div class="card kpi"><div class="l">المركبات النشطة</div><div class="v num">18<small>من 24</small></div><div class="d">4 متوقفة · 2 في الصيانة</div></div>
+      <div class="card kpi"><div class="l">التنبيهات المفتوحة</div><div class="v num">3</div><div class="d down"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>تنبيه حرج واحد</div></div>
+    </div>
+
+    <div class="grid">
+      <div class="card mapcard">
+        <div class="hd"><span class="chip">الخريطة الحيّة · 6 مسارات نشطة</span><span class="chip num" style="font-weight:500;color:var(--secondary)">آخر تحديث قبل 12 ثانية</span></div>
+        <div id="map"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="card">
+        <div class="hd"><h2>الرحلات حسب الساعة <span>اليوم</span></h2></div>
+        <div class="chart" id="c-hours"></div>
+        <div class="hd" style="margin-top:22px"><h2>حالة الأسطول <span>الآن</span></h2></div>
+        <div class="donut" id="c-fleet"></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="hd"><h2>الرحلات الجارية <span>6 مسارات</span></h2><a class="btn tinted" href="#routes" style="height:30px;font-size:12.5px">عرض الكل</a></div>
+        <table id="t-live"><thead><tr><th>المسار</th><th>السائق</th><th>المركبة</th><th>التقدّم</th><th>الوصول المتوقع</th><th>الحالة</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="card">
+        <div class="hd"><h2>الالتزام بالوقت <span>آخر 14 يومًا</span></h2><div class="seg"><button class="on">14 يومًا</button><button>30 يومًا</button></div></div>
+        <div class="chart" id="c-ontime"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Routes -->
+  <section class="page" id="routes">
+    <div class="grid" style="grid-template-columns:minmax(0,1fr) 360px">
+      <div class="card mapcard"><div class="hd"><span class="chip" id="r-chip">كل المسارات</span></div><div id="map2"></div><div class="legend" id="legend2"></div></div>
+      <div class="rlist" id="rlist"></div>
+    </div>
+  </section>
+
+  <!-- Vehicles -->
+  <section class="page" id="vehicles">
+    <div class="kpis" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div class="card kpi"><div class="l">إجمالي المركبات</div><div class="v num">24</div></div>
+      <div class="card kpi"><div class="l">متوسط الاستخدام</div><div class="v num">78<small>%</small></div></div>
+      <div class="card kpi"><div class="l">متوسط استهلاك الوقود</div><div class="v num">11.4<small>لتر/100كم</small></div></div>
+      <div class="card kpi"><div class="l">صيانة خلال 30 يومًا</div><div class="v num">5</div></div>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="hd"><h2>المركبات</h2><div class="seg"><button class="on">الكل</button><button>نشطة</button><button>متوقفة</button><button>صيانة</button></div></div>
+        <table id="t-veh"><thead><tr><th>المركبة</th><th>اللوحة</th><th>السائق</th><th>العدّاد</th><th>الوقود</th><th>الصيانة القادمة</th><th>الحالة</th></tr></thead><tbody></tbody></table></div>
+      <div class="card"><div class="hd"><h2>استهلاك الوقود <span>لتر لكل 100 كم · هذا الأسبوع</span></h2></div><div class="chart" id="c-fuel"></div></div>
+    </div>
+  </section>
+
+  <!-- Drivers -->
+  <section class="page" id="drivers">
+    <div class="card"><div class="hd"><h2>السائقون <span>12 سائقًا</span></h2></div>
+      <table id="t-drv"><thead><tr><th>السائق</th><th>المسار اليوم</th><th>الرحلات هذا الشهر</th><th>الالتزام بالوقت</th><th>درجة القيادة</th><th>الحالة</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <!-- Alerts -->
+  <section class="page" id="alerts">
+    <div class="alist" id="alist"></div>
+  </section>
+
+  <!-- Reports -->
+  <section class="page" id="reports">
+    <div class="grid2">
+      <div class="card"><div class="hd"><h2>الرحلات الأسبوعية <span>آخر 8 أسابيع</span></h2></div><div class="chart" id="c-weeks"></div></div>
+      <div class="card"><div class="hd"><h2>المسافة حسب المسار <span>هذا الأسبوع · كم</span></h2></div><div class="chart" id="c-dist"></div></div>
+      <div class="card"><div class="hd"><h2>الالتزام بالوقت <span>آخر 30 يومًا</span></h2></div><div class="chart" id="c-ontime30"></div></div>
+      <div class="card"><div class="hd"><h2>أسباب التأخير <span>هذا الشهر</span></h2></div><div class="chart" id="c-delay"></div></div>
+    </div>
+  </section>
+</main>
+<div class="tip" id="tip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data.js"></script>
+<script>
+(function(){
+var RC=['#0f9d8f','#eb6834','#6250d6','#eda100','#e87ba4','#2a78d6'];
+var R=window.ROUTES;
+var DRV=['فهد العتيبي','سعود القحطاني','ماجد الشهري','تركي الدوسري','ناصر الغامدي','عبدالله المطيري'];
+var VEH=[['تويوتا هايلكس','ر ق ن 4821'],['إيسوزو NPR','ب س د 1193'],['هيونداي H350','ح ع ل 7740'],['تويوتا هايلكس','ك م ر 3382'],['ميتسوبيشي كانتر','ط ق ب 9057'],['فورد ترانزيت','د ن ه 2216']];
+var PROG=[.62,.40,.85,.30,.55,.72];
+var STAT=[['في المسار','var(--good)'],['في المسار','var(--good)'],['تسليم جارٍ','var(--brand)'],['متأخر 9 دقائق','var(--warn)'],['في المسار','var(--good)'],['توقف غير مجدول','var(--crit)']];
+var ETA=['11:20','11:05','10:30','12:15','12:40','11:55'];
+
+document.getElementById('today').textContent=new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+
+/* Router */
+var titles={overview:'نظرة عامة',routes:'المسارات',vehicles:'المركبات',drivers:'السائقون',alerts:'التنبيهات',reports:'التقارير'};
+var maps={};
+function go(){
+  var h=(location.hash||'#overview').slice(1); if(!titles[h]) h='overview';
+  document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('on',p.id===h)});
+  document.querySelectorAll('#nav a').forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+h)});
+  document.getElementById('title').textContent=titles[h];
+  if(h==='overview'&&!maps.map) maps.map=buildMap('map','legend',false);
+  if(h==='routes'&&!maps.map2) maps.map2=buildMap('map2','legend2',true);
+  Object.keys(maps).forEach(function(k){setTimeout(function(){maps[k].m.invalidateSize()},50)});
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',go);
+
+/* Map */
+function pt(r,f){var i=Math.floor(r.line.length*f);return r.line[Math.min(i,r.line.length-1)]}
+function buildMap(id,legId,full){
+  var m=L.map(id,{zoomControl:false,attributionControl:true,scrollWheelZoom:full});
+  L.control.zoom({position:'bottomleft'}).addTo(m);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19}).addTo(m);
+  var layers=[],all=[];
+  R.forEach(function(r,i){
+    var c=RC[i];
+    var halo=L.polyline(r.line,{color:'#fff',weight:8,opacity:.9}).addTo(m);
+    var ln=L.polyline(r.line,{color:c,weight:4,opacity:.95}).addTo(m);
+    ln.bindPopup('<b>مسار '+r.name+' · '+r.id+'</b>'+r.stops.length+' محطات · '+r.km+' كم · '+r.min+' دقيقة');
+    r.stops.forEach(function(s,j){L.marker([s.lat,s.lon],{icon:L.divIcon({className:'',html:'<div class="stop" style="--c:'+c+'"></div>',iconSize:[10,10],iconAnchor:[5,5]})}).addTo(m).bindPopup('<b>'+s.name+'</b>المحطة '+(j+1)+' من مسار '+r.name)});
+    var p=pt(r,PROG[i]);
+    var v=L.marker(p,{icon:L.divIcon({className:'',html:'<div class="veh'+(i===5?' alert':'')+'"></div>',iconSize:[16,16],iconAnchor:[8,8]}),zIndexOffset:1000}).addTo(m);
+    v.bindPopup('<b>'+VEH[i][0]+' · '+VEH[i][1]+'</b>'+DRV[i]+'<br>'+STAT[i][0]+' · الوصول '+ETA[i]);
+    layers.push({halo:halo,ln:ln,v:v}); all.push(ln);
+  });
+  var d=R[0].depot;
+  L.marker([d.lat,d.lon],{icon:L.divIcon({className:'',html:'<div class="depot"><svg viewBox="0 0 24 24"><path d="M3 8l9-4 9 4v9l-9 4-9-4z"/><path d="M3 8l9 4 9-4M12 12v9"/></svg></div>',iconSize:[26,26],iconAnchor:[13,13]})}).addTo(m).bindPopup('<b>'+d.name+'</b>نقطة الانطلاق والعودة');
+  m.fitBounds(L.featureGroup(all).getBounds().pad(.06));
+  var lg=document.getElementById(legId);
+  lg.innerHTML=R.map(function(r,i){return '<span style="--c:'+RC[i]+'"><i></i>'+r.name+' · '+r.id+'</span>'}).join('');
+  return {m:m,layers:layers,focus:function(i){
+    layers.forEach(function(l,j){var on=i<0||i===j;l.ln.setStyle({opacity:on?.95:.18});l.halo.setStyle({opacity:on?.9:.15})});
+    if(i<0) m.fitBounds(L.featureGroup(all).getBounds().pad(.06)); else m.fitBounds(layers[i].ln.getBounds().pad(.12));
+  }};
+}
+
+/* Tables */
+function badge(i){return '<span class="st" style="--c:'+STAT[i][1]+'">'+STAT[i][0]+'</span>'}
+document.querySelector('#t-live tbody').innerHTML=R.map(function(r,i){
+  var done=Math.round(PROG[i]*r.stops.length);
+  return '<tr><td><span class="rt" style="--c:'+RC[i]+'"><i></i>'+r.name+' · '+r.id+'</span></td><td>'+DRV[i]+'</td><td>'+VEH[i][0]+'<span class="sub">'+VEH[i][1]+'</span></td><td><div class="bar"><i style="width:'+Math.round(PROG[i]*100)+'%"></i></div><span class="sub num">'+done+' من '+r.stops.length+' محطات</span></td><td class="num">'+ETA[i]+'</td><td>'+badge(i)+'</td></tr>'}).join('');
+
+var VROWS=[[0,84312,62,'تغيير زيت · بعد 1,688 كم','نشطة','var(--good)'],[1,121904,45,'فحص الفرامل · 28 أكتوبر','نشطة','var(--good)'],[2,67210,81,'لا شيء خلال 30 يومًا','نشطة','var(--good)'],[3,93477,28,'تغيير إطارات · 3 نوفمبر','نشطة','var(--good)'],[4,140552,90,'لا شيء خلال 30 يومًا','نشطة','var(--good)'],[5,58120,17,'تنبيه محرك · فحص عاجل','توقف غير مجدول','var(--crit)']];
+var EXTRA=[['تويوتا كوستر','ص ر م 6610','—',201330,0,'صيانة دورية · اليوم','في الصيانة','var(--warn)'],['إيسوزو NPR','ل ه ن 4470','—',77201,100,'لا شيء خلال 30 يومًا','متوقفة','var(--tertiary)']];
+document.querySelector('#t-veh tbody').innerHTML=VROWS.map(function(v){return '<tr><td>'+VEH[v[0]][0]+'</td><td class="num">'+VEH[v[0]][1]+'</td><td>'+DRV[v[0]]+'</td><td class="num">'+v[1].toLocaleString('en')+' كم</td><td><div class="bar"><i style="width:'+v[2]+'%;background:'+(v[2]<30?'var(--warn)':'var(--brand)')+'"></i></div><span class="sub num">'+v[2]+'%</span></td><td>'+v[3]+'</td><td><span class="st" style="--c:'+v[5]+'">'+v[4]+'</span></td></tr>'}).join('')
+ +EXTRA.map(function(v){return '<tr><td>'+v[0]+'</td><td class="num">'+v[1]+'</td><td>'+v[2]+'</td><td class="num">'+v[3].toLocaleString('en')+' كم</td><td><div class="bar"><i style="width:'+v[4]+'%"></i></div><span class="sub num">'+v[4]+'%</span></td><td>'+v[5]+'</td><td><span class="st" style="--c:'+v[7]+'">'+v[6]+'</span></td></tr>'}).join('');
+
+var DRVX=[[31,97,92],[28,95,88],[34,98,95],[26,89,81],[29,94,90],[22,90,76]];
+document.querySelector('#t-drv tbody').innerHTML=DRV.map(function(n,i){var x=DRVX[i];return '<tr><td><div class="dv"><span class="ava">'+n[0]+'</span>'+n+'</div></td><td><span class="rt" style="--c:'+RC[i]+'"><i></i>'+R[i].name+' · '+R[i].id+'</span></td><td class="num">'+x[0]+'</td><td class="num">'+x[1]+'%</td><td><div class="bar"><i style="width:'+x[2]+'%;background:'+(x[2]<80?'var(--warn)':'var(--brand)')+'"></i></div><span class="sub num">'+x[2]+' من 100</span></td><td>'+badge(i)+'</td></tr>'}).join('')
+ +[['خالد الزهراني','إجازة'],['بندر الحربي','خارج الدوام'],['يوسف السبيعي','خارج الدوام']].map(function(d){return '<tr><td><div class="dv"><span class="ava">'+d[0][0]+'</span>'+d[0]+'</div></td><td>—</td><td class="num">'+(18+d[0].length)+'</td><td class="num">93%</td><td><div class="bar"><i style="width:86%"></i></div><span class="sub num">86 من 100</span></td><td><span class="st">'+d[1]+'</span></td></tr>'}).join('');
+
+/* Routes list */
+var rl=document.getElementById('rlist');
+rl.innerHTML=R.map(function(r,i){
+  var legs=r.legs.map(function(l,j){return '<div class="leg" style="--c:'+RC[i]+'"><i></i><b>'+l.to+'</b><span class="num">'+l.km+' كم · '+l.min+' د</span></div>'}).join('');
+  return '<div class="card ritem" data-i="'+i+'"><div class="t"><span class="rt" style="--c:'+RC[i]+'"><i></i>مسار '+r.name+' · '+r.id+'</span>'+badge(i)+'</div><div class="m"><span><b class="num">'+r.stops.length+'</b> محطات</span><span><b class="num">'+r.km+'</b> كم</span><span><b class="num">'+r.min+'</b> دقيقة</span></div><div class="m"><span>'+DRV[i]+' · '+VEH[i][1]+'</span></div><div class="legs">'+legs+'</div></div>'}).join('');
+rl.addEventListener('click',function(e){
+  var it=e.target.closest('.ritem'); if(!it) return;
+  var i=+it.dataset.i, was=it.classList.contains('on');
+  rl.querySelectorAll('.ritem').forEach(function(x){x.classList.remove('on')});
+  if(!was) it.classList.add('on');
+  document.getElementById('r-chip').textContent=was?'كل المسارات':'مسار '+R[i].name+' · '+R[i].id;
+  if(maps.map2) maps.map2.focus(was?-1:i);
+});
+
+/* Alerts */
+var AL=[['crit','توقف غير مجدول منذ 14 دقيقة','فورد ترانزيت · د ن ه 2216 · مسار المطار · عبدالله المطيري','قبل 14 دقيقة','M12 9v4M12 17h.01M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z'],
+['warn','تأخر عن الجدول بـ9 دقائق','تويوتا هايلكس · ك م ر 3382 · مسار الجنوب · تركي الدوسري','قبل 22 دقيقة','M12 7v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z'],
+['warn','مستوى وقود منخفض 17%','فورد ترانزيت · د ن ه 2216','قبل 40 دقيقة','M4 20V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v14M4 20h11M15 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0v-5.5L18 7'],
+['','اكتمل مسار الشرق','هيونداي H350 · ح ع ل 7740 · ماجد الشهري · 4 من 4 محطات','قبل ساعة','M20 6 9 17l-5-5'],
+['','صيانة دورية اليوم','تويوتا كوستر · ص ر م 6610 · ورشة الفرع','9:00','M14.7 6.3a4 4 0 0 0 5 5L13 18a2 2 0 0 1-3 3L7 18 3 21l-1-1 3-4-3-3a2 2 0 0 1 3-3l6.7-6.7a4 4 0 0 0 5 5z']];
+document.getElementById('alist').innerHTML=AL.map(function(a){return '<div class="card al"><i class="'+a[0]+'"><svg viewBox="0 0 24 24"><path d="'+a[4]+'"/></svg></i><div><b>'+a[1]+'</b><span>'+a[2]+'</span></div><time class="num">'+a[3]+'</time></div>'}).join('');
+
+/* Charts */
+var tip=document.getElementById('tip');
+function showTip(e,h){tip.innerHTML=h;tip.style.opacity=1;tip.style.left=e.clientX+'px';tip.style.top=e.clientY+'px'}
+function hideTip(){tip.style.opacity=0}
+function hook(el){
+  el.querySelectorAll('[data-t]').forEach(function(n){
+    n.addEventListener('mousemove',function(e){showTip(e,n.dataset.t)});n.addEventListener('mouseleave',hideTip);
+  });
+}
+function bars(id,labels,vals,o){
+  o=o||{};var W=o.w||520,H=o.h||190,pl=34,pb=24,pt=10,ih=H-pb-pt,iw=W-pl-6,n=vals.length,max=o.max||Math.ceil(Math.max.apply(null,vals)/o.step||1)*(o.step||1);
+  var bw=iw/n,g=Math.max(2,bw*.3),s='<svg viewBox="0 0 '+W+' '+H+'">';
+  for(var k=0;k<=4;k++){var y=pt+ih-ih*k/4;s+='<line class="gl" x1="'+pl+'" x2="'+W+'" y1="'+y+'" y2="'+y+'"/><text x="'+(pl-6)+'" y="'+(y+4)+'" text-anchor="end">'+(max*k/4)+(o.unit||'')+'</text>'}
+  vals.forEach(function(v,i){var h=ih*v/max,x=pl+i*bw+g/2,y=pt+ih-h,w=bw-g,c=o.colors?o.colors[i]:(o.hi&&i===o.hi?'var(--brand)':'var(--r1)');
+    s+='<g data-t="<b>'+labels[i]+'</b>'+v+(o.unitT||'')+'"><rect x="'+(x-g/2)+'" y="'+pt+'" width="'+bw+'" height="'+ih+'" fill="transparent"/><path d="M'+x+' '+(pt+ih)+'V'+(y+4)+'a4 4 0 0 1 4-4h'+(w-8)+'a4 4 0 0 1 4 4V'+(pt+ih)+'z" fill="'+c+'" opacity="'+(o.hi!=null&&i!==o.hi?.45:1)+'"/></g>';
+    if(n<=16||i%Math.ceil(n/12)===0) s+='<text x="'+(x+w/2)+'" y="'+(H-6)+'" text-anchor="middle">'+labels[i]+'</text>'});
+  s+='</svg>';var el=document.getElementById(id);el.innerHTML=s;hook(el);
+}
+function line(id,labels,vals,o){
+  o=o||{};var W=o.w||520,H=o.h||190,pl=34,pb=24,pt=10,ih=H-pb-pt,iw=W-pl-8,n=vals.length,min=o.min||0,max=o.max||100;
+  var X=function(i){return pl+iw*i/(n-1)},Y=function(v){return pt+ih-ih*(v-min)/(max-min)};
+  var s='<svg viewBox="0 0 '+W+' '+H+'">';
+  for(var k=0;k<=4;k++){var y=pt+ih-ih*k/4;s+='<line class="gl" x1="'+pl+'" x2="'+W+'" y1="'+y+'" y2="'+y+'"/><text x="'+(pl-6)+'" y="'+(y+4)+'" text-anchor="end">'+(min+(max-min)*k/4)+(o.unit||'')+'</text>'}
+  if(o.target) s+='<line x1="'+pl+'" x2="'+W+'" y1="'+Y(o.target)+'" y2="'+Y(o.target)+'" stroke="var(--tertiary)" stroke-dasharray="4 4"/><text x="'+(pl+4)+'" y="'+(Y(o.target)-5)+'" text-anchor="end">الهدف '+o.target+'%</text>';
+  var d=vals.map(function(v,i){return (i?'L':'M')+X(i)+' '+Y(v)}).join(' ');
+  s+='<path d="'+d+' L'+X(n-1)+' '+(pt+ih)+' L'+X(0)+' '+(pt+ih)+'z" fill="var(--r1)" opacity=".08"/><path d="'+d+'" fill="none" stroke="var(--r1)" stroke-width="2" stroke-linejoin="round"/>';
+  vals.forEach(function(v,i){s+='<g data-t="<b>'+labels[i]+'</b>'+v+(o.unit||'')+'"><rect x="'+(X(i)-iw/(n-1)/2)+'" y="'+pt+'" width="'+(iw/(n-1))+'" height="'+ih+'" fill="transparent"/><circle cx="'+X(i)+'" cy="'+Y(v)+'" r="'+(i===n-1?4:3)+'" fill="var(--r1)" stroke="#fff" stroke-width="2"/></g>';
+    if(i%Math.ceil(n/7)===0||i===n-1) s+='<text x="'+X(i)+'" y="'+(H-6)+'" text-anchor="middle">'+labels[i]+'</text>'});
+  s+='</svg>';var el=document.getElementById(id);el.innerHTML=s;hook(el);
+}
+function hbars(id,labels,vals,o){
+  o=o||{};var W=520,rh=26,H=vals.length*rh+8,pl=124,max=o.max||Math.max.apply(null,vals)*1.15,iw=W-pl-52,x0=W-pl,s='<svg viewBox="0 0 '+W+' '+H+'">';
+  vals.forEach(function(v,i){var y=4+i*rh,w=iw*v/max,c=o.colors?o.colors[i]:'var(--r1)';
+    s+='<g data-t="<b>'+labels[i]+'</b>'+v+(o.unit||'')+'"><text x="'+W+'" y="'+(y+16)+'" text-anchor="start" style="fill:var(--label);font-size:12px">'+labels[i]+'</text><path d="M'+x0+' '+(y+4)+'h-'+(w-4)+'a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4H'+x0+'z" fill="'+c+'"/><text x="'+(x0-w-8)+'" y="'+(y+16)+'" text-anchor="start">'+v+(o.unit||'')+'</text></g>'});
+  s+='</svg>';var el=document.getElementById(id);el.innerHTML=s;hook(el);
+}
+function donut(id,items,total,label){
+  var r=46,c=2*Math.PI*r,off=0,s='<div class="ring"><svg viewBox="0 0 120 120" width="120" height="120">';
+  items.forEach(function(it){var l=c*it[1]/total;s+='<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="'+it[2]+'" stroke-width="14" stroke-dasharray="'+Math.max(0,l-3)+' '+(c-l+3)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 60 60)" data-t="<b>'+it[0]+'</b>'+it[1]+'"/>';off+=l});
+  s+='</svg><div class="c"><b class="num">'+total+'</b><span>'+label+'</span></div></div><div class="lg">'+items.map(function(it){return '<span style="--c:'+it[2]+'"><i></i>'+it[0]+'<b class="num">'+it[1]+'</b></span>'}).join('')+'</div>';
+  var el=document.getElementById(id);el.innerHTML=s;hook(el);
+}
+
+var hrs=['6','7','8','9','10','11','12','13','14','15','16','17','18','19'];
+bars('c-hours',hrs,[4,9,14,18,21,19,12,8,13,17,16,11,7,3],{step:5,unitT:' رحلة',hi:4,h:170});
+donut('c-fleet',[['نشطة',18,'var(--brand)'],['متوقفة',4,'#C7C7CC'],['في الصيانة',2,'var(--warn)']],24,'مركبة');
+var days=[];for(var i=13;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);days.push(new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory',{day:'numeric',month:'short'}).format(d))}
+line('c-ontime',days,[91,92.5,90,93,94,92,95,93.5,96,94,95.5,93,94.8,94.2],{min:80,max:100,unit:'%',target:92,h:200});
+hbars('c-fuel',['تويوتا هايلكس · 4821','إيسوزو NPR · 1193','هيونداي H350 · 7740','تويوتا هايلكس · 3382','ميتسوبيشي كانتر · 9057','فورد ترانزيت · 2216'],[9.8,13.4,10.1,10.6,14.2,11.9],{unit:' ل',max:16});
+bars('c-weeks',['أ1','أ2','أ3','أ4','أ5','أ6','أ7','أ8'],[612,648,590,701,688,724,760,742],{step:200,unitT:' رحلة',hi:7});
+hbars('c-dist',R.map(function(r){return 'مسار '+r.name+' · '+r.id}),R.map(function(r){return Math.round(r.km*5.1)}),{unit:' كم',colors:RC});
+var d30=[];for(var i=29;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);d30.push(new Intl.DateTimeFormat('ar-SA-u-nu-latn-ca-gregory',{day:'numeric',month:'short'}).format(d))}
+line('c-ontime30',d30,[89,90,91,88,92,93,91,90,92,94,93,91,92,95,94,93,92,94,96,95,93,94,95,93.5,96,94,95.5,93,94.8,94.2],{min:80,max:100,unit:'%',target:92});
+hbars('c-delay',['ازدحام مروري','انتظار عند العميل','توقف غير مجدول','طقس','عطل في المركبة'],[41,27,14,9,6],{unit:'%',max:50});
+
+go();
+})();
+</script>
+</body>
+</html>
