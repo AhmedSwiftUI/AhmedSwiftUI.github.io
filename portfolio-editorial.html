@@ -7,7 +7,7 @@
 /* Editorial white: large two-line headline, wide whitespace, one featured project, flat gray stages for screenshots. Apple HIG tokens, light only, Almarai. */
 :root{
   --bg:#FFFFFF; --surface:#F5F5F7; --surface-2:#ECECF1; --label:#1D1D1F; --secondary:#6E6E73; --tertiary:#8E8E93; --line:#E5E5EA;
-  --blue:#007AFF; --blue-press:#0066D6; --tint:rgba(0,122,255,.1); --navy:#0E2A5E; --sky:#5AC8FA; --amber:#FFB340;
+  --blue:#007AFF; --blue-press:#0066D6; --tint:rgba(0,122,255,.1);
   --font:"Almarai",-apple-system,BlinkMacSystemFont,"SF Arabic","Segoe UI",sans-serif;
   --shadow:0 1px 2px rgba(0,0,0,.05),0 14px 40px rgba(0,0,0,.08);
   --ease:cubic-bezier(.2,.65,.3,1);
@@ -38,35 +38,24 @@ img,svg{max-width:100%;display:block}
 .links a:hover{color:var(--label)}
 
 /* Hero */
-.hero{position:relative;overflow:hidden;margin-top:12px;padding:104px 8% 84px;text-align:center;background:var(--navy);color:#fff;border-radius:28px}
-.hero > *{position:relative;z-index:1}
-.hero .rule{width:28px;height:2px;background:var(--sky);margin:0 auto 22px}
-.hero .kicker{font-size:15px;color:rgba(255,255,255,.7);margin-bottom:18px}
-.hero h1{font-size:clamp(2.1rem,5.6vw,4.2rem);font-weight:800;line-height:1.3;margin:0 auto}
-.hero .bio{max-width:700px;margin:28px auto 0;color:rgba(255,255,255,.78);font-size:1.05rem;line-height:1.95}
-.hero .pill.primary{background:#fff;color:var(--navy)}
-.hero .pill.primary:hover{background:#EAF2FF}
-.hero .pill.tinted{background:rgba(255,255,255,.12);color:#fff}
-.hero .pill.tinted:hover{background:rgba(255,255,255,.2)}
-.hero .down{color:#fff}
-.hero :focus-visible{outline-color:#fff}
-/* Flat shapes: crisp edges, solid fills, slow float/spin */
-.hero .shapes{position:absolute;inset:0;z-index:0;pointer-events:none;transform:translate(calc(var(--mx,0) * 1px),calc(var(--my,0) * 1px))}
-.hero .shapes i{position:absolute;display:block;animation:float var(--t,10s) ease-in-out infinite;animation-delay:var(--a,0s);transform-origin:center}
-.hero .s1{width:110px;height:110px;border-radius:50%;background:var(--blue);right:2.5%;top:40%;--t:11s}
-.hero .s2{width:170px;height:170px;border-radius:50%;border:2px solid rgba(255,255,255,.55);left:-4%;top:18%;--t:14s;--a:-5s}
-.hero .s3{width:44px;height:44px;background:var(--sky);right:14%;top:6%;animation-name:spin;--t:26s}
-.hero .s4{width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:52px solid var(--amber);left:8%;bottom:6%;--t:12s;--a:-3s}
-.hero .s5{width:14px;height:14px;border-radius:50%;background:#fff;right:34%;top:7%;--t:8s;--a:-2s}
-.hero .s6{width:88px;height:7px;border-radius:4px;background:rgba(255,255,255,.6);left:4%;top:50%;--t:9s;--a:-6s}
-.hero .s7{width:90px;height:90px;border-radius:50%;border:3px solid var(--blue);right:3.5%;bottom:5%;--t:13s;--a:-8s}
-.hero .s8{width:34px;height:34px;border-radius:50%;background:var(--sky);left:5%;top:72%;--t:10s;--a:-4s}
-.hero .s9{width:56px;height:56px;border:2px solid rgba(255,255,255,.5);border-radius:10px;right:22%;bottom:3%;animation-name:spin;--t:34s;--a:-10s}
-.hero .s10{width:10px;height:10px;border-radius:50%;background:var(--amber);left:30%;top:5%;--t:7s;--a:-1s}
-.hero .s11{width:58px;height:7px;border-radius:4px;background:var(--blue);right:6%;top:22%;--t:11s;--a:-7s}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0) scale(var(--s,1))}50%{transform:translateY(-18px) rotate(4deg) scale(var(--s,1))}}
-@keyframes spin{from{transform:rotate(45deg) scale(var(--s,1))}to{transform:rotate(405deg) scale(var(--s,1))}}
-.hero .actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
+.hero{padding:64px 0 56px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:36px 44px;align-items:center;text-align:start}
+.hero .rule{width:28px;height:2px;background:var(--blue);margin:0 0 22px}
+.hero .kicker{font-size:15px;color:var(--secondary);margin-bottom:18px}
+.hero h1{font-size:clamp(2rem,3.8vw,2.95rem);font-weight:800;line-height:1.3;margin:0}
+.hero .bio{max-width:560px;margin:24px 0 0;color:var(--secondary);font-size:1.02rem;line-height:1.95}
+.hero .actions{display:flex;justify-content:flex-start;flex-wrap:wrap;gap:10px;margin-top:30px}
+/* Illustration: static scene + three floating pieces that bob and follow the pointer */
+.hero .art{position:relative;aspect-ratio:3/2;transform:translate(calc(var(--mx,0) * -.3px),calc(var(--my,0) * -.3px));transition:transform .3s}
+.hero .art .scene{width:100%;height:100%;object-fit:contain;animation:rise 1.1s var(--ease) .3s both}
+.hero .art .fl{position:absolute;width:21%;transform:translate(calc(var(--mx,0) * var(--k,1) * 1px),calc(var(--my,0) * var(--k,1) * 1px));transition:transform .3s;animation:rise 1s var(--ease) var(--a,.7s) both}
+.hero .art .fl img{animation:bob var(--t,6s) ease-in-out infinite;animation-delay:var(--b,0s)}
+.hero .art .node{left:-3%;top:-7%;width:17%;--k:1.2;--t:7s;--a:.75s}
+.hero .art .card{right:-3%;top:0;width:24%;--k:.8;--t:8s;--b:-3s;--a:.9s}
+.hero .art .bubble{left:1%;bottom:4%;width:18%;--k:-.6;--t:6.5s;--b:-1.5s;--a:1.05s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+/* Spot illustrations */
+.head .spot{width:84px;height:84px;object-fit:contain;margin:-14px 0}
+.end .spot{width:150px;height:150px;object-fit:contain;margin-bottom:10px;animation:bob 7s ease-in-out infinite}
 .pill{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border-radius:21px;font-weight:700;font-size:15px;transition:background .15s,transform .1s}
 .pill:active{transform:scale(.98)}
 .pill.primary{background:var(--label);color:#fff}
@@ -75,7 +64,7 @@ img,svg{max-width:100%;display:block}
 .pill.tinted:hover{background:var(--surface-2)}
 .pill svg{width:18px;height:18px;fill:currentColor}
 .pill code{font-family:ui-monospace,Menlo,monospace;font-size:14px;direction:ltr;unicode-bidi:isolate;font-weight:500}
-.hero .down{display:inline-block;margin-top:34px;color:var(--blue);font-size:14px;font-weight:700}
+.hero .down{display:inline-block;margin-top:30px;color:var(--blue);font-size:14px;font-weight:700}
 
 /* Featured project */
 .feature{background:var(--surface);border-radius:28px;padding:56px 6% 0;overflow:hidden}
@@ -151,8 +140,7 @@ section{padding:72px 0 0}
 .list.reveal{opacity:1;transform:none}
 .list.reveal .row{opacity:0;transform:translateY(12px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
 .list.reveal.seen .row{opacity:1;transform:none}
-.hero > *{animation:rise .9s var(--ease) both}
-.hero .shapes{animation:fade 1.4s var(--ease) both}
+.hero .copy > *{animation:rise .9s var(--ease) both}
 .hero .rule{animation-name:grow;animation-delay:.05s}
 .hero .kicker{animation-delay:.12s}
 .hero h1{animation-delay:.22s}
@@ -160,20 +148,20 @@ section{padding:72px 0 0}
 .hero .actions{animation-delay:.48s}
 .hero .down{animation-delay:.6s}
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-@keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes grow{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:none}}
 .nav .brand,.nav .links a{transition:transform .5s var(--ease)}
 .nav.scrolled .brand{transform:scale(.94)}
 
 @media (max-width:760px){
   .links a:not(.keep){display:none}
+  .hero{padding:44px 0 40px;grid-template-columns:minmax(0,1fr);gap:28px;text-align:center}
+  .hero .rule{margin:0 auto 18px}
+  .hero .bio{margin:20px auto 0}
+  .hero .actions{justify-content:center}
+  .hero .art{max-width:420px;margin:0 auto;width:100%}
   .hero h1 br{display:none}
-  .hero{padding:72px 7% 60px;border-radius:22px;margin-top:8px}
-  .hero .shapes i{--s:.6}
-  .hero .shapes .s2,.hero .shapes .s6,.hero .shapes .s9,.hero .shapes .s11{display:none}
-  .hero .shapes .s1{top:8%;right:-3%}
-  .hero .shapes .s7{bottom:2%;right:-2%}
-  .hero .shapes .s4{left:3%}
+  .head .spot{width:64px;height:64px;margin:-10px 0}
+  .end .spot{width:120px;height:120px}
   .end{padding:52px 7% 56px}
   .feature{padding:36px 5% 0;border-radius:22px}
   .feature-line{padding-top:20px}
@@ -187,9 +175,8 @@ section{padding:72px 0 0}
   .reveal,.list.reveal .row{opacity:1;transform:none;transition:none}
   .feature .shot,.work .stage .frame,.work.reveal .stage .frame,.feature.reveal .shot{transform:none;transition:none}
   .head::before{transform:none;transition:none}
-  .hero > *{animation:none}
+  .hero .copy > *,.hero .art .scene,.hero .art .fl,.hero .art .fl img,.end .spot{animation:none}
   .feature .shot img{transform:none}
-  .hero .shapes i{animation:none}
 }
 </style>
 
@@ -201,7 +188,7 @@ section{padding:72px 0 0}
 
 <div class="wrap" id="top">
 <section class="hero">
-  <div class="shapes" aria-hidden="true"><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i><i class="s5"></i><i class="s6"></i><i class="s7"></i><i class="s8"></i><i class="s9"></i><i class="s10"></i><i class="s11"></i></div>
+  <div class="copy">
   <div class="rule"></div>
   <p class="kicker">ملف أعمال</p>
   <h1>مبرمج تطبيقات أجهزة ذكية<br>ومنصات ذكاء اصطناعي.</h1>
@@ -211,6 +198,13 @@ section{padding:72px 0 0}
     <a class="pill tinted" href="mailto:a-2011a@hotmail.com"><code>a-2011a@hotmail.com</code></a>
   </div>
   <a class="down" href="#work">استكشف الأعمال ↓</a>
+  </div>
+  <div class="art" aria-hidden="true">
+    <img class="scene" src="img/hero.png" alt="" width="1536" height="1024">
+    <span class="fl node"><img src="img/node.png" alt=""></span>
+    <span class="fl card"><img src="img/card.png" alt=""></span>
+    <span class="fl bubble"><img src="img/bubble.png" alt=""></span>
+  </div>
 </section>
 
 <div class="feature reveal" id="work" data-tags="web ios">
@@ -301,7 +295,7 @@ section{padding:72px 0 0}
 </section>
 
 <section id="skills">
-  <div class="head reveal"><h2>المهارات</h2></div>
+  <div class="head reveal"><h2>المهارات</h2><img class="spot" src="img/skills.png" alt=""></div>
   <div class="list reveal">
     <div class="row"><b>iOS</b><span>Swift، SwiftUI، MapKit، CoreLocation، Vision، SwiftData، FoundationModels</span></div>
     <div class="row"><b>المنصات الخلفية</b><span>Python، FastAPI، Django، Supabase، PostgreSQL، Docker</span></div>
@@ -312,7 +306,7 @@ section{padding:72px 0 0}
 </section>
 
 <section id="edu">
-  <div class="head reveal"><h2>التدريب</h2></div>
+  <div class="head reveal"><h2>التدريب</h2><img class="spot" src="img/training.png" alt=""></div>
   <div class="list reveal">
     <div class="row"><b>2026</b><span>الدورة المتقدمة في هندسة الأنظمة الوكيلية<em class="t">الهيئة السعودية للبيانات والذكاء الاصطناعي (سدايا)</em></span></div>
     <div class="row"><b>2026</b><span>الذكاء الاصطناعي لقطاع الطاقة والصيانة التنبؤية<em class="t">وزارة الاتصالات وتقنية المعلومات · مهارات المستقبل</em></span></div>
@@ -324,6 +318,7 @@ section{padding:72px 0 0}
 </section>
 
 <div class="end reveal">
+  <img class="spot" src="img/contact.png" alt="">
   <p class="kicker">تواصل</p>
   <h2>عندك فكرة تطبيق أو منصة؟</h2>
   <a class="pill primary" href="mailto:a-2011a@hotmail.com">راسلني</a>
@@ -356,12 +351,12 @@ section{padding:72px 0 0}
     reveals.forEach(function(el){io.observe(el)});
   }else{reveals.forEach(function(el){el.classList.add('seen')})}
   var featImg=document.querySelector('.feature .shot img');
-  var aur=document.querySelector('.hero .shapes');
-  if(aur&&!reduce&&matchMedia('(pointer:fine)').matches){
+  var art=document.querySelector('.hero .art');
+  if(art&&!reduce&&matchMedia('(pointer:fine)').matches){
     var tx=0,ty=0,cx=0,cy=0,run=false;
-    function tick(){cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;aur.style.setProperty('--mx',cx.toFixed(2));aur.style.setProperty('--my',cy.toFixed(2));
+    function tick(){cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;art.style.setProperty('--mx',cx.toFixed(2));art.style.setProperty('--my',cy.toFixed(2));
       if(Math.abs(tx-cx)>.2||Math.abs(ty-cy)>.2){requestAnimationFrame(tick)}else{run=false}}
-    addEventListener('pointermove',function(e){tx=(e.clientX/innerWidth-.5)*16;ty=(e.clientY/innerHeight-.5)*10;if(!run){run=true;requestAnimationFrame(tick)}},{passive:true});
+    addEventListener('pointermove',function(e){tx=(e.clientX/innerWidth-.5)*18;ty=(e.clientY/innerHeight-.5)*12;if(!run){run=true;requestAnimationFrame(tick)}},{passive:true});
   }
 
   var nav=document.querySelector('.nav'), bar=document.querySelector('.progress'), pending=false;
