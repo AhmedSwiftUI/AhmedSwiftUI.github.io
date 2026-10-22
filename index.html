@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أحمد الحربي</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="ملف أعمال أحمد الحربي: مهندس ذكاء اصطناعي ومطوّر iOS">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* Layout: sticky identity column on the right, a scrolling work column on the left; one blue accent, type does the work */
+:root{
+  --bg:#F3F4F6; --surface:#FFFFFF; --fg:#13161B; --muted:#6A7280; --line:#E2E5EA; --soft:#EBEDF1;
+  --accent:#2447D6; --accent-soft:#E8ECFB;
+  --display:"Readex Pro","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0E1116; --surface:#151A21; --fg:#E7EAF0; --muted:#98A2B3; --line:#262D38; --soft:#1C222B;
+  --accent:#8AA8FF; --accent-soft:#1B2340; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0E1116; --surface:#151A21; --fg:#E7EAF0; --muted:#98A2B3; --line:#262D38; --soft:#1C222B;
+  --accent:#8AA8FF; --accent-soft:#1B2340; color-scheme:dark }
+
+*{box-sizing:border-box}
+html{direction:rtl;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.3;text-wrap:balance}
+p{margin:0}
+img{max-width:100%;height:auto;display:block}
+
+.page{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:0 72px;align-items:start}
+
+/* Identity column */
+.id{position:sticky;top:0;padding-block:72px 48px;min-height:100vh;display:flex;flex-direction:column}
+.id h1{font-size:clamp(2.4rem,4.5vw,3.4rem);font-weight:700;letter-spacing:-.01em}
+.id .role{font-family:var(--display);font-weight:500;font-size:1.15rem;margin-top:10px;color:var(--fg)}
+.id .bio{color:var(--muted);margin-top:18px;max-width:34ch;font-size:1rem}
+.nav{margin-top:48px;display:grid;gap:10px;font-family:var(--display);font-weight:500;font-size:.9rem}
+.nav a{display:flex;align-items:center;gap:12px;color:var(--muted);width:max-content}
+.nav a::before{content:"";width:28px;height:1px;background:var(--muted);transition:width .2s,background .2s}
+.nav a:hover,.nav a.on{color:var(--fg)}
+.nav a:hover::before,.nav a.on::before{width:56px;background:var(--fg)}
+.links{margin-top:auto;padding-top:48px;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.92rem}
+.links a,.links span{display:inline-flex;align-items:center;gap:7px;color:var(--muted)}
+.links a:hover{color:var(--fg)}
+.links svg{width:17px;height:17px;fill:currentColor}
+.links code{font-family:ui-monospace,Menlo,monospace;font-size:.88em;direction:ltr;unicode-bidi:isolate;color:var(--fg)}
+
+/* Work column */
+.work{padding-block:72px 64px;min-width:0}
+section{padding-block:0 72px}
+.sec{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.06em;color:var(--muted);margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.sec::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* Featured */
+.feat{display:grid;gap:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card img{width:100%;border-bottom:1px solid var(--line)}
+.card .body{padding:22px 24px 24px}
+.card h3{font-size:1.3rem;font-weight:600}
+.card h3 small{font-family:var(--body);font-weight:500;color:var(--muted);font-size:.85rem;margin-right:10px}
+.card p{margin-top:10px;max-width:62ch}
+.proof{margin-top:14px;display:inline-flex;align-items:center;gap:10px;background:var(--accent-soft);color:var(--fg);border-radius:8px;padding:7px 12px;font-size:.92rem;font-weight:500}
+.proof::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.tech{margin-top:14px;color:var(--muted);font-size:.86rem;font-family:var(--display);font-weight:500}
+
+/* Project list */
+.list{display:grid;border-top:1px solid var(--line);margin-top:40px}
+.item{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:4px 28px;padding:20px 0;border-bottom:1px solid var(--line)}
+.item h3{font-size:1.02rem;font-weight:600}
+.item h3 a{color:var(--accent)}
+.item h3 a:hover{text-decoration:underline}
+.item p{font-size:.97rem}
+.item .tech{margin-top:6px}
+
+/* Skills */
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 40px}
+.skills h3{font-size:.95rem;font-weight:600;margin-bottom:6px}
+.skills p{color:var(--muted);font-size:.95rem}
+
+/* Training */
+.edu{display:grid;gap:18px}
+.edu .row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;align-items:baseline}
+.edu .year{font-family:var(--display);color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.edu b{font-weight:600}
+.edu .note{color:var(--muted);font-size:.93rem}
+.fill{color:var(--muted);border-bottom:1px dashed var(--muted)}
+
+footer{color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);padding-top:20px}
+
+@media (max-width:900px){
+  .page{grid-template-columns:minmax(0,1fr);gap:0}
+  .id{position:static;min-height:0;padding-block:48px 8px}
+  .nav{display:none}
+  .links{margin-top:28px;padding-top:0}
+  .work{padding-block:40px 48px}
+  section{padding-bottom:56px}
+  .item{grid-template-columns:minmax(0,1fr)}
+  .skills{grid-template-columns:minmax(0,1fr)}
+  .edu .row{grid-template-columns:minmax(0,1fr);gap:2px}
+  .card .body{padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+<aside class="id">
+  <h1>أحمد الحربي</h1>
+  <p class="role">مهندس ذكاء اصطناعي ومطوّر iOS</p>
+  <p class="bio">أبني المنتج كاملًا: التطبيق، والمنصة خلفه، ونموذج الذكاء الاصطناعي داخله. معظم أعمالي تحل مشكلات سعودية محلية، وتصل إلى جهاز حقيقي.</p>
+  <nav class="nav" aria-label="الأقسام">
+    <a href="#work">المشاريع</a>
+    <a href="#skills">المهارات</a>
+    <a href="#edu">التدريب</a>
+  </nav>
+  <div class="links">
+    <a href="https://github.com/AhmedSwiftUI" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+    <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v.4l8 5 8-5V7H4zm16 10V9.7l-8 5-8-5V17h16z"/></svg><code>a-2011a@hotmail.com</code></span>
+  </div>
+</aside>
+
+<main class="work">
+<section id="work">
+  <h2 class="sec">المشاريع</h2>
+  <div class="feat">
+    <article class="card">
+      <img src="img/uw.jpg" alt="واجهات نظام الأعمال الموحّدة على الويب والجوال" width="1600" height="1190" loading="eager">
+      <div class="body">
+        <h3>نظام الأعمال الموحّدة <small>Unified Works</small></h3>
+        <p>منصة لتوثيق أعمال الحفر والمرافق من الميدان بالصور، يتحقق فيها الذكاء الاصطناعي من مطابقة كل صورة للبند المطلوب، وتتابع الجهة والأمانة سير العمل على خريطة حيّة. بوابة ويب وتطبيق iOS للمشرف الميداني.</p>
+        <div class="proof">متأهّل للمرحلة النهائية في معرض ومؤتمر سيف 2026</div>
+        <p class="tech">FastAPI · SwiftUI · رؤية حاسوبية · OCR عربي</p>
+      </div>
+    </article>
+    <article class="card">
+      <img src="img/nutq.jpg" alt="شاشات تطبيق نُطق لتعليم الحروف" width="1600" height="1360" loading="lazy">
+      <div class="body">
+        <h3>نُطق <small>Nutq</small></h3>
+        <p>تطبيق لتعليم الأطفال الحروف العربية باللعب: يسمع الطفل الحرف، ثم ينطقه في المايك، ثم يكتبه بإصبعه، ويكسب أصدقاء من الحيوانات. التقييم حقيقي بقياس صوت الطفل وتغطية رسمه لشكل الحرف.</p>
+        <p class="tech">SwiftUI · AVFoundation · 28 حرفًا في ثلاثة عوالم</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="list">
+    <article class="item"><h3><a href="https://testflight.apple.com/join/CH9Q9KWU" target="_blank" rel="noopener">معاون</a></h3><div><p>توثيق الحوادث المرورية: مسار GPS في الخلفية، وسحب مقاطع الداش كام عبر Wi-Fi، وتقرير PDF ببصمة رقمية، وتبادل التقرير بين الطرفين عبر QR بلا شبكة. متاح على TestFlight.</p><p class="tech">SwiftUI · CoreLocation · PDFKit</p></div></article>
+    <article class="item"><h3>نادل</h3><div><p>منصة توصيل مطاعم بثلاث واجهات: تطبيق العميل وتطبيق السائق على iOS، وواجهة المطعم كتطبيق ويب، مع تتبّع حيّ وتنبيهات لا يفوتها طلب.</p><p class="tech">SwiftUI · Supabase · Web Push</p></div></article>
+    <article class="item"><h3>أثر</h3><div><p>تشجير ذكي متوافق مع مبادرة السعودية الخضراء: ترشيح الشجرة المناسبة للمنطقة بنموذج لغوي يعمل على الجهاز، وتتبّع كل شجرة، وخريطة كثافة. مشروع هاكاثون.</p><p class="tech">SwiftUI · FoundationModels · Metal</p></div></article>
+    <article class="item"><h3>ثروة</h3><div><p>رحلة من ثماني محطات تجهّز المنشأة الصغيرة لملف تمويل بدرجة جاهزية من 100، يقودها مساعد ذكاء اصطناعي. مشروع هاكاثون.</p><p class="tech">SwiftUI · 17 شاشة</p></div></article>
+    <article class="item"><h3><a href="https://ahmedswiftui.github.io/ds-badge-mock/" target="_blank" rel="noopener">محاكي شارة عالم البيانات</a></h3><div><p>منصة تدريب موقوتة لاختبار سدايا بـ560 سؤالًا مدقّقًا، مع دليل مرجعي من 40 صفحة بالعربية والإنجليزية.</p><p class="tech">JavaScript · Supabase · GitHub Pages</p></div></article>
+    <article class="item"><h3>نظام الرصد الذكي للطرق</h3><div><p>كشف الحوادث وتلف الطريق من فيديو الداش كام وعرضها على خريطة. مشروع تخرج دورة رؤية الحاسب في سدايا.</p><p class="tech">YOLOv8 · Python</p></div></article>
+    <article class="item"><h3>وكيل المشتري العقاري</h3><div><p>نظام متعدد الوكلاء يرافق المشتري من البحث إلى القرار. المشروع النهائي للدورة المتقدمة في الأنظمة الوكيلية.</p><p class="tech">LangGraph · RAG · FastAPI</p></div></article>
+    <article class="item"><h3>رادار الطلبات</h3><div><p>يلتقط طلبات الشراء الحقيقية من منصات التواصل، ويصنّفها بنموذج لغوي، ويرسلها للمشتركين حسب الفئة والمنطقة عبر تيليجرام.</p><p class="tech">Python · Claude API · Telethon</p></div></article>
+    <article class="item"><h3>نظام توثيق المستندات</h3><div><p>تدقيق امتثال صور ونماذج أعمال الحفر لجهة خدمية: مصنّف صور، وقراءة النماذج آليًا، ونطاقات جغرافية، ومراجعة المشرف. اختُبر ميدانيًا مع مقاول.</p><p class="tech">FastAPI · CoreML · SwiftUI</p></div></article>
+    <article class="item"><h3>DocClassifier</h3><div><p>تطبيق macOS يدرّب مصنّف مستندات وصور من مجلدات أمثلة يحددها المستخدم.</p><p class="tech">SwiftUI · CreateML</p></div></article>
+    <article class="item"><h3>مركز إدارة التدريب</h3><div><p>لوحة لمتابعة تفعيل الموظفين في التدريب، تقرأ تقارير Excel بالعربية والإنجليزية وتدمجها، في ملف واحد بلا خادم.</p><p class="tech">JavaScript · SheetJS</p></div></article>
+    <article class="item"><h3>أحكام</h3><div><p>فهرس لما قرره أهل العلم في مصنّفاتهم، كل حكم منسوب لقائله ومجلده وصفحته.</p><p class="tech">Django</p></div></article>
+  </div>
+</section>
+
+<section id="skills">
+  <h2 class="sec">المهارات</h2>
+  <div class="skills">
+    <div><h3>iOS</h3><p>SwiftUI، MapKit، CoreLocation، FoundationModels، Vision، Metal، SwiftData، TestFlight.</p></div>
+    <div><h3>الخلفية والبيانات</h3><p>FastAPI، Django، Node.js، Supabase وPostgres، SQLite، Docker، Oracle Cloud.</p></div>
+    <div><h3>الذكاء الاصطناعي</h3><p>Claude API، LangGraph وLangChain، RAG، أنظمة متعددة الوكلاء، YOLOv8، CoreML وCreateML، OCR عربي.</p></div>
+    <div><h3>الويب والتصميم</h3><p>JavaScript، PWA وWeb Push، React، تصميم الواجهات والهوية البصرية.</p></div>
+  </div>
+</section>
+
+<section id="edu">
+  <h2 class="sec">التدريب</h2>
+  <div class="edu">
+    <div class="row"><span class="year">2026</span><div><b>الدورة المتقدمة في هندسة الأنظمة الوكيلية</b> <span class="note">LangGraph وRAG والأنظمة متعددة الوكلاء.</span></div></div>
+    <div class="row"><span class="year">2026</span><div><b>دورة رؤية الحاسب للمطوّرين، سدايا</b></div></div>
+    <div class="row"><span class="year"><span class="fill">السنة</span></span><div><b><span class="fill">الدرجة الجامعية والتخصص والجامعة</span></b></div></div>
+  </div>
+</section>
+
+<footer>أحمد الحربي · 2026</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.nav a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))}).filter(Boolean);
+  if(!('IntersectionObserver' in window)||!secs.length)return;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)}) } });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  secs.forEach(function(s){io.observe(s)});
+})();
+</script>
+</body>
+</html>
