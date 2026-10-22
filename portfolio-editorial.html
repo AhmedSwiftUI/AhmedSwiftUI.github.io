@@ -7,7 +7,7 @@
 /* Editorial white: large two-line headline, wide whitespace, one featured project, flat gray stages for screenshots. Apple HIG tokens, light only, Almarai. */
 :root{
   --bg:#FFFFFF; --surface:#F5F5F7; --surface-2:#ECECF1; --label:#1D1D1F; --secondary:#6E6E73; --tertiary:#8E8E93; --line:#E5E5EA;
-  --blue:#007AFF; --blue-press:#0066D6; --tint:rgba(0,122,255,.1);
+  --blue:#007AFF; --blue-press:#0066D6; --tint:rgba(0,122,255,.1); --navy:#0E2A5E; --sky:#5AC8FA; --amber:#FFB340;
   --font:"Almarai",-apple-system,BlinkMacSystemFont,"SF Arabic","Segoe UI",sans-serif;
   --shadow:0 1px 2px rgba(0,0,0,.05),0 14px 40px rgba(0,0,0,.08);
   --ease:cubic-bezier(.2,.65,.3,1);
@@ -37,28 +37,35 @@ img,svg{max-width:100%;display:block}
 .links a{transition:color .15s}
 .links a:hover{color:var(--label)}
 
-/* Hero backdrop: soft drifting light + faint dot grid, fades into white */
-body{position:relative}
-.aurora{position:absolute;top:0;right:0;left:0;height:min(820px,110vh);overflow:hidden;z-index:0;pointer-events:none;
-  -webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 100%);mask-image:linear-gradient(to bottom,#000 55%,transparent 100%)}
-.aurora .grid{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(29,29,31,.09) 1px,transparent 1.2px);background-size:26px 26px;
-  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 38%,#000 20%,transparent 100%);mask-image:radial-gradient(ellipse 70% 60% at 50% 38%,#000 20%,transparent 100%)}
-.aurora i{position:absolute;display:block;border-radius:50%;filter:blur(70px);opacity:.75;will-change:transform;
-  transform:translate(calc(var(--mx,0) * var(--k,1) * 1px),calc(var(--my,0) * var(--k,1) * 1px))}
-.aurora i::after{content:"";position:absolute;inset:0;border-radius:inherit;background:inherit;animation:drift var(--t,22s) ease-in-out infinite alternate;animation-delay:var(--a,0s)}
-.aurora .b1{width:520px;height:520px;right:8%;top:-140px;background:radial-gradient(circle,rgba(0,122,255,.30),rgba(0,122,255,0) 70%);--k:1.4;--t:24s}
-.aurora .b2{width:440px;height:440px;left:12%;top:40px;background:radial-gradient(circle,rgba(94,92,230,.22),rgba(94,92,230,0) 70%);--k:-1;--t:28s;--a:-9s}
-.aurora .b3{width:380px;height:380px;right:38%;top:300px;background:radial-gradient(circle,rgba(90,200,250,.26),rgba(90,200,250,0) 70%);--k:.7;--t:20s;--a:-4s}
-.aurora .b4{width:300px;height:300px;left:34%;top:-60px;background:radial-gradient(circle,rgba(255,159,10,.10),rgba(255,159,10,0) 70%);--k:-.5;--t:30s;--a:-15s}
-@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-60px,40px) scale(1.08)}100%{transform:translate(50px,-30px) scale(.96)}}
-.nav,.wrap{position:relative;z-index:1}
-
 /* Hero */
-.hero{padding:104px 0 72px;text-align:center}
-.hero .rule{width:28px;height:2px;background:var(--blue);margin:0 auto 22px}
-.hero .kicker{font-size:15px;color:var(--secondary);margin-bottom:18px}
+.hero{position:relative;overflow:hidden;margin-top:12px;padding:104px 8% 84px;text-align:center;background:var(--navy);color:#fff;border-radius:28px}
+.hero > *{position:relative;z-index:1}
+.hero .rule{width:28px;height:2px;background:var(--sky);margin:0 auto 22px}
+.hero .kicker{font-size:15px;color:rgba(255,255,255,.7);margin-bottom:18px}
 .hero h1{font-size:clamp(2.1rem,5.6vw,4.2rem);font-weight:800;line-height:1.3;margin:0 auto}
-.hero .bio{max-width:700px;margin:28px auto 0;color:var(--secondary);font-size:1.05rem;line-height:1.95}
+.hero .bio{max-width:700px;margin:28px auto 0;color:rgba(255,255,255,.78);font-size:1.05rem;line-height:1.95}
+.hero .pill.primary{background:#fff;color:var(--navy)}
+.hero .pill.primary:hover{background:#EAF2FF}
+.hero .pill.tinted{background:rgba(255,255,255,.12);color:#fff}
+.hero .pill.tinted:hover{background:rgba(255,255,255,.2)}
+.hero .down{color:#fff}
+.hero :focus-visible{outline-color:#fff}
+/* Flat shapes: crisp edges, solid fills, slow float/spin */
+.hero .shapes{position:absolute;inset:0;z-index:0;pointer-events:none;transform:translate(calc(var(--mx,0) * 1px),calc(var(--my,0) * 1px))}
+.hero .shapes i{position:absolute;display:block;animation:float var(--t,10s) ease-in-out infinite;animation-delay:var(--a,0s);transform-origin:center}
+.hero .s1{width:110px;height:110px;border-radius:50%;background:var(--blue);right:2.5%;top:40%;--t:11s}
+.hero .s2{width:170px;height:170px;border-radius:50%;border:2px solid rgba(255,255,255,.55);left:-4%;top:18%;--t:14s;--a:-5s}
+.hero .s3{width:44px;height:44px;background:var(--sky);right:14%;top:6%;animation-name:spin;--t:26s}
+.hero .s4{width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:52px solid var(--amber);left:8%;bottom:6%;--t:12s;--a:-3s}
+.hero .s5{width:14px;height:14px;border-radius:50%;background:#fff;right:34%;top:7%;--t:8s;--a:-2s}
+.hero .s6{width:88px;height:7px;border-radius:4px;background:rgba(255,255,255,.6);left:4%;top:50%;--t:9s;--a:-6s}
+.hero .s7{width:90px;height:90px;border-radius:50%;border:3px solid var(--blue);right:3.5%;bottom:5%;--t:13s;--a:-8s}
+.hero .s8{width:34px;height:34px;border-radius:50%;background:var(--sky);left:5%;top:72%;--t:10s;--a:-4s}
+.hero .s9{width:56px;height:56px;border:2px solid rgba(255,255,255,.5);border-radius:10px;right:22%;bottom:3%;animation-name:spin;--t:34s;--a:-10s}
+.hero .s10{width:10px;height:10px;border-radius:50%;background:var(--amber);left:30%;top:5%;--t:7s;--a:-1s}
+.hero .s11{width:58px;height:7px;border-radius:4px;background:var(--blue);right:6%;top:22%;--t:11s;--a:-7s}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0) scale(var(--s,1))}50%{transform:translateY(-18px) rotate(4deg) scale(var(--s,1))}}
+@keyframes spin{from{transform:rotate(45deg) scale(var(--s,1))}to{transform:rotate(405deg) scale(var(--s,1))}}
 .hero .actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:34px}
 .pill{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border-radius:21px;font-weight:700;font-size:15px;transition:background .15s,transform .1s}
 .pill:active{transform:scale(.98)}
@@ -145,6 +152,7 @@ section{padding:72px 0 0}
 .list.reveal .row{opacity:0;transform:translateY(12px);transition:opacity .7s var(--ease),transform .7s var(--ease);transition-delay:calc(var(--i,0) * 70ms)}
 .list.reveal.seen .row{opacity:1;transform:none}
 .hero > *{animation:rise .9s var(--ease) both}
+.hero .shapes{animation:fade 1.4s var(--ease) both}
 .hero .rule{animation-name:grow;animation-delay:.05s}
 .hero .kicker{animation-delay:.12s}
 .hero h1{animation-delay:.22s}
@@ -152,20 +160,20 @@ section{padding:72px 0 0}
 .hero .actions{animation-delay:.48s}
 .hero .down{animation-delay:.6s}
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes grow{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:none}}
 .nav .brand,.nav .links a{transition:transform .5s var(--ease)}
 .nav.scrolled .brand{transform:scale(.94)}
 
 @media (max-width:760px){
   .links a:not(.keep){display:none}
-  .hero{padding:64px 0 52px}
   .hero h1 br{display:none}
-  .aurora{height:620px}
-  .aurora i{filter:blur(50px)}
-  .aurora .b1{width:340px;height:340px;right:-10%}
-  .aurora .b2{width:300px;height:300px;left:-10%}
-  .aurora .b3{width:260px;height:260px;top:260px}
-  .aurora .b4{display:none}
+  .hero{padding:72px 7% 60px;border-radius:22px;margin-top:8px}
+  .hero .shapes i{--s:.6}
+  .hero .shapes .s2,.hero .shapes .s6,.hero .shapes .s9,.hero .shapes .s11{display:none}
+  .hero .shapes .s1{top:8%;right:-3%}
+  .hero .shapes .s7{bottom:2%;right:-2%}
+  .hero .shapes .s4{left:3%}
   .end{padding:52px 7% 56px}
   .feature{padding:36px 5% 0;border-radius:22px}
   .feature-line{padding-top:20px}
@@ -181,20 +189,19 @@ section{padding:72px 0 0}
   .head::before{transform:none;transition:none}
   .hero > *{animation:none}
   .feature .shot img{transform:none}
-  .aurora i::after{animation:none}
-  .aurora i{transform:none}
+  .hero .shapes i{animation:none}
 }
 </style>
 
 <div class="progress" aria-hidden="true"></div>
-<div class="aurora" aria-hidden="true"><div class="grid"></div><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
 <header class="nav"><div class="wrap">
   <a class="brand" href="#top">أحمد الحربي<span>.</span></a>
   <nav class="links"><a href="#work">المشاريع</a><a href="#skills">المهارات</a><a href="#edu">التدريب</a><a class="keep" href="https://github.com/AhmedSwiftUI" target="_blank" rel="noopener">GitHub</a></nav>
 </div></header>
 
 <div class="wrap" id="top">
-<section class="hero" style="padding-top:88px">
+<section class="hero">
+  <div class="shapes" aria-hidden="true"><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i><i class="s5"></i><i class="s6"></i><i class="s7"></i><i class="s8"></i><i class="s9"></i><i class="s10"></i><i class="s11"></i></div>
   <div class="rule"></div>
   <p class="kicker">ملف أعمال</p>
   <h1>مبرمج تطبيقات أجهزة ذكية<br>ومنصات ذكاء اصطناعي.</h1>
@@ -349,12 +356,12 @@ section{padding:72px 0 0}
     reveals.forEach(function(el){io.observe(el)});
   }else{reveals.forEach(function(el){el.classList.add('seen')})}
   var featImg=document.querySelector('.feature .shot img');
-  var aur=document.querySelector('.aurora');
+  var aur=document.querySelector('.hero .shapes');
   if(aur&&!reduce&&matchMedia('(pointer:fine)').matches){
     var tx=0,ty=0,cx=0,cy=0,run=false;
     function tick(){cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;aur.style.setProperty('--mx',cx.toFixed(2));aur.style.setProperty('--my',cy.toFixed(2));
       if(Math.abs(tx-cx)>.2||Math.abs(ty-cy)>.2){requestAnimationFrame(tick)}else{run=false}}
-    addEventListener('pointermove',function(e){tx=(e.clientX/innerWidth-.5)*28;ty=(e.clientY/innerHeight-.5)*18;if(!run){run=true;requestAnimationFrame(tick)}},{passive:true});
+    addEventListener('pointermove',function(e){tx=(e.clientX/innerWidth-.5)*16;ty=(e.clientY/innerHeight-.5)*10;if(!run){run=true;requestAnimationFrame(tick)}},{passive:true});
   }
 
   var nav=document.querySelector('.nav'), bar=document.querySelector('.progress'), pending=false;
